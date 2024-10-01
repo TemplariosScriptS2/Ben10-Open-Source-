@@ -1,0 +1,38 @@
+local args = {
+    [1] = "RequestingPropName",
+    [2] = "SmokeGreen"
+}
+
+game:GetService("ReplicatedStorage").RE:FindFirstChild("1Clea1rTool1s"):FireServer(unpack(args))
+
+wait(2)
+
+-- Obter o servio de input do usurio
+local userInputService = game:GetService("UserInputService")
+
+-- Funo para converter uma poso no mundo para a tela
+local function worldToScreenPoint(position)
+    local camera = game.Workspace.CurrentCamera
+    local viewportPosition = camera:WorldToViewportPoint(position)
+    return Vector2.new(viewportPosition.X * workspace.CurrentCamera.ViewportSize.X, (1 - viewportPosition.Y) * workspace.CurrentCamera.ViewportSize.Y)
+end
+
+-- Fuo para clicar na posio onde o jogador estpisando
+local function clickOnPlayerPosition()
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+    local screenPosition = worldToScreenPoint(humanoidRootPart.Position)
+
+    local inputEvent = Instance.new("InputObjectEvent")
+    inputEvent.Position = screenPosition
+    inputEvent.UserInputType = Enum.UserInputType.MouseButton1
+
+    userInputService.InputBegan:Fire(inputEvent)
+    wait(0.1) -- Espera um pequeno intervalo antes de soltar o clique (opcional)
+    userInputService.InputEnded:Fire(inputEvent)
+end
+
+-- Chamar a funo para clicar na posio onde o jogador estpisando
+clickOnPlayerPosition()
